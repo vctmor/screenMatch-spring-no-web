@@ -1,0 +1,266 @@
+Claro! Aqui está um exercício dividido em etapas que progressivamente aumenta a dificuldade. Este exercício é baseado em um projeto Spring Boot para gerenciar cursos, onde você criará uma aplicação CRUD (Create, Read, Update, Delete) para a entidade `Course`.
+
+### Etapa 1: Configuração Inicial
+**Objetivo**: Configurar um projeto Spring Boot básico.
+
+1. **Crie um novo projeto Spring Boot**:
+   - Utilize o Spring Initializr (https://start.spring.io/) para criar um novo projeto.
+   - Selecione as dependências: `Spring Web`, `Spring Data JPA`, `H2 Database`, `Lombok`.
+
+2. **Configure o banco de dados H2**:
+   - No arquivo `application.properties`, adicione as seguintes configurações:
+     ```properties
+     spring.datasource.url=jdbc:h2:mem:testdb
+     spring.datasource.driverClassName=org.h2.Driver
+     spring.datasource.username=sa
+     spring.datasource.password=password
+     spring.h2.console.enabled=true
+     spring.jpa.hibernate.ddl-auto=update
+     spring.jpa.show-sql=true
+     ```
+
+### Etapa 2: Criação da Entidade `Course`
+**Objetivo**: Criar uma entidade JPA e mapeá-la para uma tabela no banco de dados.
+
+1. **Crie a entidade `Course`**:
+   - No pacote `br.com.tddjava.tddjava.modules.courses.entities`, crie a classe `Course`.
+   - Adicione os campos `id`, `name`, `description`, e `category`.
+   - Utilize as anotações JPA (`@Entity`, `@Table`, `@Id`, `@GeneratedValue`) e Lombok (`@Data`, `@AllArgsConstructor`, `@NoArgsConstructor`).
+
+   ```java
+   package br.com.tddjava.tddjava.modules.courses.entities;
+
+   import javax.persistence.Entity;
+   import javax.persistence.GeneratedValue;
+   import javax.persistence.GenerationType;
+   import javax.persistence.Id;
+   import javax.persistence.Table;
+   import lombok.AllArgsConstructor;
+   import lombok.Data;
+   import lombok.NoArgsConstructor;
+
+   @Entity
+   @Table(name = "courses")
+   @Data
+   @AllArgsConstructor
+   @NoArgsConstructor
+   public class Course {
+       @Id
+       @GeneratedValue(strategy = GenerationType.IDENTITY)
+       private Long id;
+       private String name;
+       private String description;
+       private String category;
+   }
+   ```
+
+### Etapa 3: Criação do Repositório
+**Objetivo**: Criar um repositório JPA para a entidade `Course`.
+
+1. **Crie a interface `CourseRepository`**:
+   - No pacote `br.com.tddjava.tddjava.modules.courses.repositories`, crie a interface `CourseRepository` que extende `JpaRepository`.
+
+   ```java
+   package br.com.tddjava.tddjava.modules.courses.repositories;
+
+   import org.springframework.data.jpa.repository.JpaRepository;
+   import br.com.tddjava.tddjava.modules.courses.entities.Course;
+
+   public interface CourseRepository extends JpaRepository<Course, Long> {
+   }
+   ```
+
+### Etapa 4: Criação do Serviço
+**Objetivo**: Criar um serviço para gerenciar a lógica de negócios da aplicação.
+
+1. **Crie a classe `CourseService`**:
+   - No pacote `br.com.tddjava.tddjava.modules.courses.services`, crie a classe `CourseService`.
+   - Adicione métodos para criar, ler, atualizar e deletar cursos.
+   - Utilize a anotação `@Service`.
+
+   ```java
+   package br.com.tddjava.tddjava.modules.courses.services;
+
+   import java.util.List;
+   import java.util.Optional;
+   import org.springframework.beans.factory.annotation.Autowired;
+   import org.springframework.stereotype.Service;
+   import br.com.tddjava.tddjava.modules.courses.entities.Course;
+   import br.com.tddjava.tddjava.modules.courses.repositories.CourseRepository;
+
+   @Service
+   public class CourseService {
+
+       @Autowired
+       private CourseRepository courseRepository;
+
+       public List<Course> findAll() {
+           return courseRepository.findAll();
+       }
+
+       public Optional<Course> findById(Long id) {
+           return courseRepository.findById(id);
+       }
+
+       public Course save(Course course) {
+           return courseRepository.save(course);
+       }
+
+       public void deleteById(Long id) {
+           courseRepository.deleteById(id);
+       }
+   }
+   ```
+
+### Etapa 5: Criação do Controlador
+**Objetivo**: Criar um controlador REST para expor os endpoints da aplicação.
+
+1. **Crie a classe `CourseController`**:
+   - No pacote `br.com.tddjava.tddjava.modules.courses.controllers`, crie a classe `CourseController`.
+   - Utilize a anotação `@RestController` e mapeie os endpoints CRUD (`@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`).
+
+   ```java
+   package br.com.tddjava.tddjava.modules.courses.controllers;
+
+   import java.util.List;
+   import java.util.Optional;
+   import org.springframework.beans.factory.annotation.Autowired;
+   import org.springframework.http.HttpStatus;
+   import org.springframework.http.ResponseEntity;
+   import org.springframework.web.bind.annotation.*;
+
+   import br.com.tddjava.tddjava.modules.courses.entities.Course;
+   import br.com.tddjava.tddjava.modules.courses.services.CourseService;
+
+   @RestController
+   @RequestMapping("/api/courses")
+   public class CourseController {
+
+       @Autowired
+       private CourseService courseService;
+
+       @GetMapping
+       public List<Course> getAllCourses() {
+           return courseService.findAll();
+       }
+
+       @GetMapping("/{id}")
+       public ResponseEntity<Course> getCourseById(@PathVariable Long id) {
+           Optional<Course> course = courseService.findById(id);
+           return course.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+       }
+
+       @PostMapping
+       public Course createCourse(@RequestBody Course course) {
+           return courseService.save(course);
+       }
+
+       @PutMapping("/{id}")
+       public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody Course courseDetails) {
+           Optional<Course> course = courseService.findById(id);
+           if (course.isPresent()) {
+               Course updatedCourse = course.get();
+               updatedCourse.setName(courseDetails.getName());
+               updatedCourse.setDescription(courseDetails.getDescription());
+               updatedCourse.setCategory(courseDetails.getCategory());
+               return ResponseEntity.ok(courseService.save(updatedCourse));
+           } else {
+               return ResponseEntity.notFound().build();
+           }
+       }
+
+       @DeleteMapping("/{id}")
+       public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
+           courseService.deleteById(id);
+           return ResponseEntity.noContent().build();
+       }
+   }
+   ```
+
+### Etapa 6: Testes Unitários
+**Objetivo**: Escrever testes unitários para o serviço e o controlador.
+
+1. **Crie testes para o `CourseService`**:
+   - Utilize o JUnit e Mockito para escrever testes unitários para os métodos do `CourseService`.
+
+   ```java
+   package br.com.tddjava.tddjava.modules.courses.services;
+
+   import static org.junit.jupiter.api.Assertions.*;
+   import static org.mockito.Mockito.*;
+
+   import java.util.Arrays;
+   import java.util.List;
+   import java.util.Optional;
+
+   import org.junit.jupiter.api.BeforeEach;
+   import org.junit.jupiter.api.Test;
+   import org.mockito.InjectMocks;
+   import org.mockito.Mock;
+   import org.mockito.MockitoAnnotations;
+
+   import br.com.tddjava.tddjava.modules.courses.entities.Course;
+   import br.com.tddjava.tddjava.modules.courses.repositories.CourseRepository;
+
+   public class CourseServiceTest {
+
+       @InjectMocks
+       private CourseService courseService;
+
+       @Mock
+       private CourseRepository courseRepository;
+
+       @BeforeEach
+       void setUp() {
+           MockitoAnnotations.openMocks(this);
+       }
+
+       @Test
+       void testFindAll() {
+           Course course1 = new Course(1L, "Course 1", "Description 1", "Category 1");
+           Course course2 = new Course(2L, "Course 2", "Description 2", "Category 2");
+           List<Course> courses = Arrays.asList(course1, course2);
+
+           when(courseRepository.findAll()).thenReturn(courses);
+
+           List<Course> result = courseService.findAll();
+
+           assertEquals(2, result.size());
+           assertEquals("Course 1", result.get(0).getName());
+       }
+
+       @Test
+       void testFindById() {
+           Course course = new Course(1L, "Course 1", "Description 1", "Category 1");
+
+           when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
+
+           Optional<Course> result = courseService.findById(1L);
+
+           assertTrue(result.isPresent());
+           assertEquals("Course 1", result.get().getName());
+       }
+
+       @Test
+       void testSave() {
+           Course course = new Course(1L, "Course 1", "Description 1", "Category 1");
+
+           when(courseRepository.save(course)).thenReturn(course);
+
+           Course result = courseService.save(course);
+
+           assertEquals("Course 1", result.getName());
+       }
+
+       @Test
+       void testDeleteById() {
+           doNothing().when(courseRepository).deleteById(1L);
+
+           courseService.deleteById(1L);
+
+           verify(courseRepository, times(1)).deleteById(1L);
+       }
+   }
+   ```
+
+### Etapa 7: Desafio - Integração e Testes End-to

@@ -1,0 +1,15 @@
+Certo, vou elaborar um exercício mais abrangente que aborde todo o conteúdo da aula sobre consumo de APIs com o Spring Framework.Exercício: Criando uma aplicação de busca de séries e filmesVocê foi contratado para criar uma aplicação que permite aos usuários pesquisar informações sobre séries e filmes. A aplicação deve consumir dados de duas APIs diferentes: a API do OMDB (Open Movie Database) para obter informações sobre filmes e séries, e a API de imagens de café para exibir uma imagem aleatória relacionada à pesquisa.Sua tarefa é:
+Criar um novo projeto Spring Boot e configurar o ambiente de desenvolvimento.
+Criar um pacote de serviços chamado "service" e uma classe chamada "ConsumoApi" que será responsável por fazer as requisições HTTP e obter os dados das APIs.
+Implementar o método "obterDados" na classe "ConsumoApi" que recebe uma URL como parâmetro e retorna os dados em formato JSON. Utilize as classes HttpClient, HttpRequest e HttpResponse para fazer a requisição e trate as exceções IOException e InterruptedException.
+Criar uma classe chamada "SerieFilmeService" que será responsável por consumir as APIs e fornecer os dados para a aplicação.
+Implementar um método chamado "obterInformacoesSerie" na classe "SerieFilmeService" que recebe o título de uma série como parâmetro, utiliza a classe "ConsumoApi" para fazer a requisição à API do OMDB e retorna as informações da série em formato JSON.
+Implementar um método chamado "obterInformacoesFilme" na classe "SerieFilmeService" que recebe o título de um filme como parâmetro, utiliza a classe "ConsumoApi" para fazer a requisição à API do OMDB e retorna as informações do filme em formato JSON.
+Implementar um método chamado "obterImagemAleatoria" na classe "SerieFilmeService" que utiliza a classe "ConsumoApi" para fazer a requisição à API de imagens de café e retorna a URL da imagem aleatória.
+Criar um controlador Spring MVC chamado "SerieFilmeController" que expõe endpoints para pesquisar informações de séries e filmes.
+Implementar os métodos no controlador que chamam os métodos correspondentes na classe "SerieFilmeService" e retornam os dados para a interface do usuário.
+Criar uma interface de usuário simples, como uma página web, que permite ao usuário pesquisar por séries e filmes, exibir as informações retornadas pela API e a imagem aleatória de café.
+Testar a aplicação, verificando se as requisições à API do OMDB e à API de imagens de café estão funcionando corretamente.
+Refletir sobre a importância de ter uma classe específica para consumir APIs (a classe "ConsumoApi") e como isso torna o código mais modularizado, de fácil manutenção e mais legível.
+
+Esse exercício abrange todos os principais conceitos vistos na aula, como a criação de um novo projeto Spring Boot, a organização do código em pacotes e classes, a implementação de métodos para consumir APIs, o tratamento de exceções, a criação de um controlador Spring MVC e a construção de uma interface de usuário simples.Espero que esse exercício seja útil para você praticar e consolidar o que foi aprendido. Caso tenha alguma dúvida, sinta-se à vontade para perguntar.
