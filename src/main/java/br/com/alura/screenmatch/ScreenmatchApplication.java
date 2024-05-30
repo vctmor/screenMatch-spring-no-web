@@ -16,25 +16,24 @@ public class ScreenmatchApplication implements CommandLineRunner {
 		
 	}
 
-	 //@Override
+	 @Override
     public void run(String... args) throws Exception  {
 
 		String endereco = "https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c";
 		String endereco2 = "https://www.omdbapi.com/?t=matrix&apikey=6585022c";
 
-        System.out.println("Primeiro projeto Spring sem web.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-		
-		ConsumoApi consulta = new ConsumoApi();
+		ConsumoApi consumoApi = new ConsumoApi();
 
-		var json = consulta.obterDados(endereco);
-		var json2 = consulta.obterDados(endereco2);
+		var json = consumoApi.obterDados(endereco);
+		var json2 = consumoApi.obterDados(endereco2);
 
-		System.out.println(json + "\n");
-		System.out.println(json2);
+		System.out.println("Conteúdo do json: " + json + "\n");
+		//System.out.println(json2);
 
 		ConverteDados conversor = new ConverteDados();
-		DadosSerie dados = conversor.obterDados(endereco2, DadosSerie.class);
-		System.out.println(dados);
+		DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
+
+		System.out.println("Conteúdo os dados: " + dados);
 
     }
 
