@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch;
 
+import br.com.alura.screenmatch.principal.Principal;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,21 +20,25 @@ public class ScreenmatchApplication implements CommandLineRunner {
 	 @Override
     public void run(String... args) throws Exception  {
 
-		String endereco = "https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c";
-		String endereco2 = "https://www.omdbapi.com/?t=matrix&apikey=6585022c";
+		 Principal principal = new Principal();
 
-		ConsumoApi consumoApi = new ConsumoApi();
+		 principal.exibeMenu();
 
-		var json = consumoApi.obterDados(endereco);
-		var json2 = consumoApi.obterDados(endereco2);
-
-		System.out.println("Conteúdo do json: " + json + "\n");
-		//System.out.println(json2);
-
-		ConverteDados conversor = new ConverteDados();
-		DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
-
-		System.out.println("Conteúdo os dados: " + dados);
+//		String endereco = "https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c";
+//		String endereco2 = "https://www.omdbapi.com/?t=matrix&apikey=6585022c";
+//
+//		ConsumoApi consumoApi = new ConsumoApi();
+//
+//		var json = consumoApi.obterDados(endereco);
+//		var json2 = consumoApi.obterDados(endereco2);
+//
+//		System.out.println("Conteúdo do json: " + json + "\n");
+//		//System.out.println(json2);
+//
+//		ConverteDados conversor = new ConverteDados();
+//		DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
+//
+//		System.out.println("Conteúdo os dados: " + dados);
 
     }
 
