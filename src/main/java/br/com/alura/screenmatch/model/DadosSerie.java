@@ -8,8 +8,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  // campos do registro com alias para mapeamento json
 public record DadosSerie(@JsonAlias("Title") String titulo,
                          @JsonAlias("totalSeasons") Integer totalTemporadas,
-                         @JsonAlias("imdbRating") String avaliacao) {
+                         @JsonAlias("imdbRating") String avaliacao,
+                         @JsonAlias("Genre") String genero,
+                         @JsonAlias("Actors") String elenco,
+                         @JsonAlias("Poster") String poster,
+                         @JsonAlias("Plot") String sinopse) {
 
-   
+//TODO: Acrescentar :Year, Runtime, Writer, Director, Country, Type, imdbVotes
 
 }
