@@ -9,6 +9,10 @@ import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @SpringBootApplication
 public class ScreenmatchApplication implements CommandLineRunner {
 
@@ -24,22 +28,16 @@ public class ScreenmatchApplication implements CommandLineRunner {
 
 		 principal.exibeMenu();
 
-//		String endereco = "https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c";
-//		String endereco2 = "https://www.omdbapi.com/?t=matrix&apikey=6585022c";
 //
-//		ConsumoApi consumoApi = new ConsumoApi();
+//		 List<String> nomes = Arrays.asList("Victor", "Aline",
+//				 					"Graziella", "Ana", "Vitor","Yasmin", "Iasmin", "Jaque");
 //
-//		var json = consumoApi.obterDados(endereco);
-//		var json2 = consumoApi.obterDados(endereco2);
-//
-//		System.out.println("Conteúdo do json: " + json + "\n");
-//		//System.out.println(json2);
-//
-//		ConverteDados conversor = new ConverteDados();
-//		DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
-//
-//		System.out.println("Conteúdo os dados: " + dados);
-
+//		 nomes.stream()
+//				 .sorted()
+//				 .limit(nomes.size()/2)
+//				 .filter(n -> n.startsWith("A"))
+//				 .map(n-> n.toUpperCase())
+//				 .forEach(System.out::println);
     }
 
 
