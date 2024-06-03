@@ -7,8 +7,6 @@ import br.com.alura.screenmatch.model.Episodio;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,10 +21,11 @@ public class Principal {
     private final String API_KEY = "&apikey=6585022c";
     private final String SEASON = "&season=";
 
-    private List<DadosSerie> dadosSeries = new ArrayList<>();
+    private final List<DadosSerie> dadosSeries = new ArrayList<>();
+    List<DadosTemporada> temporadas = new ArrayList<>();
 
     private String json;
-    private DadosSerie dados;
+    private DadosSerie dadosSerie;
     private String nomeSerie;
 
 
@@ -52,7 +51,7 @@ public class Principal {
                     buscarSerieWeb();
                     break;
                 case 2:
-                    //buscarEpisodioPorSerie();
+                    buscarEpisodioPorSerie();
                     break;
                 case 3:
                     //listarSeriesBuscadas();
@@ -78,8 +77,9 @@ public class Principal {
 
     private DadosSerie getDadosSerie(){
 
+
         System.out.println("Digite o nome da série para busca");
-        var nomeSerie = leitura.nextLine().replace(" ", "+");
+        nomeSerie = leitura.nextLine().replace(" ", "+");
 
         var json = consumo.obterDados(ENDERECO + nomeSerie + API_KEY);
 
@@ -87,23 +87,19 @@ public class Principal {
         return conversor.obterDados(json, DadosSerie.class);
     }
 
-    private void tmp(){
+    private void buscarEpisodioPorSerie(){
 
-        // faz requisição à API para obter dados da série
-        json = consumo.obterDados(ENDERECO + nomeSerie
-                .replace(" ", "+") + API_KEY);
+        dadosSerie = getDadosSerie();
+        String tituloSerie = dadosSerie.titulo().replace(" ", "+");
 
-        dados = conversor.obterDados(json,DadosSerie.class);
+       // TODO: se a serie nao é encontrada ou se temporadas é null da erro
+        for (int i = 1; i <= dadosSerie.totalTemporadas(); i++){
 
-        System.out.println(dados);
-
-        List<DadosTemporada> temporadas = new ArrayList<>();
-        // TODO: se a serie nao é encontrada ou se temporadas é null da erro
-        for (int i =1; i <= dados.totalTemporadas(); i++){
-
-            json = consumo.obterDados(ENDERECO
-                    + nomeSerie.replace(" ", "+")
-                    + SEASON + i + API_KEY);
+            String e = ENDERECO
+                    + tituloSerie
+                    + SEASON + i + API_KEY;
+            System.out.println("Endereço: " + e);
+            json = consumo.obterDados(e);
             DadosTemporada dadosTemporada = conversor.obterDados(json,DadosTemporada.class);
             temporadas.add(dadosTemporada);
         }
@@ -111,6 +107,12 @@ public class Principal {
 
 
         //temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+
+
+    }
+
+    private void tmp(){
+
 
         List<DadosEpisodio> dadosEpisodios = temporadas.stream()
                 .flatMap(t -> t.episodios().stream())
@@ -164,7 +166,7 @@ public class Principal {
                 .collect(Collectors.groupingBy(Episodio::getTemporada,Collectors.averagingDouble(Episodio::getAvaliacao)));
 
         System.out.println(avaliacoesPorTemporada);
-        avaliacoesPorTemporada.forEach();
+        //avaliacoesPorTemporada.forEach();
         DoubleSummaryStatistics est = episodios.stream()
                 .filter(e -> e.getAvaliacao() > 0.0)
                 .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
