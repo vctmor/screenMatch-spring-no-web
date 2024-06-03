@@ -54,7 +54,7 @@ public class Principal {
                     buscarEpisodioPorSerie();
                     break;
                 case 3:
-                    //listarSeriesBuscadas();
+                    listarSeriesBuscadas();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -66,6 +66,7 @@ public class Principal {
 
 
     }
+
 
     public void buscarSerieWeb(){
 
@@ -104,12 +105,14 @@ public class Principal {
             temporadas.add(dadosTemporada);
         }
         temporadas.forEach(System.out::println);
-
-
         //temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
-
-
     }
+
+    private void listarSeriesBuscadas() {
+        List<Serie> series = new ArrayList<>();
+    }
+
+
 
     private void tmp(){
 
