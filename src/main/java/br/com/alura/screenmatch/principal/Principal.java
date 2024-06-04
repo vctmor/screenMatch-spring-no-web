@@ -6,6 +6,7 @@ import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Episodio;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
+import br.com.alura.screenmatch.model.Serie;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -110,6 +111,15 @@ public class Principal {
 
     private void listarSeriesBuscadas() {
         List<Serie> series = new ArrayList<>();
+
+        series = dadosSeries.stream()
+                .map(d -> new Serie(d))
+                //.map(Serie::new)
+                .collect(Collectors.toList());
+                //.toList();
+        series.stream()
+                .sorted(Comparator.comparing(Serie::getGenero))
+                .forEach(System.out::println);
     }
 
 
