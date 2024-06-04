@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch.principal;
 
+import br.com.alura.screenmatch.Repository.Serierepository;
 import br.com.alura.screenmatch.model.DadosEpisodio;
 import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
@@ -28,7 +29,12 @@ public class Principal {
     private String json;
     private DadosSerie dadosSerie;
     private String nomeSerie;
+    private Serierepository repositorio;
 
+    public Principal(Serierepository repositorio) {
+
+        this.repositorio = repositorio;
+    }
 
 
     public void exibeMenu(){
@@ -72,7 +78,10 @@ public class Principal {
     public void buscarSerieWeb(){
 
         DadosSerie dados = getDadosSerie();
-        dadosSeries.add(dados);
+        //dadosSeries.add(dados);
+//        Serie serie = new Serie(dados);
+//        repositorio.save(serie);
+        repositorio.save(new Serie(dados));
         System.out.println(dados);
 
     }
