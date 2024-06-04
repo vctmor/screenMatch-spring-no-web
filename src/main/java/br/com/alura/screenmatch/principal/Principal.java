@@ -119,13 +119,7 @@ public class Principal {
     }
 
     private void listarSeriesBuscadas() {
-        List<Serie> series = new ArrayList<>();
-
-        series = dadosSeries.stream()
-                .map(d -> new Serie(d))
-                //.map(Serie::new)
-                .collect(Collectors.toList());
-                //.toList();
+        List<Serie> series = repositorio.findAll();
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero))
                 .forEach(System.out::println);
