@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 
 @Entity
-@Table(name = "series_aula")
+@Table(name = "series_")
 public class Serie {
 
     @Id
@@ -24,7 +24,7 @@ public class Serie {
     private String poster;
     private String sinopse;
 
-    @OneToMany(mappedBy = "serie")
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL)
     private List<Episodio> episodios = new ArrayList<>();
 
     public Serie (){}

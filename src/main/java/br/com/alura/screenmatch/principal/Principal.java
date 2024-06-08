@@ -25,6 +25,7 @@ public class Principal {
 
     private final List<DadosSerie> dadosSeries = new ArrayList<>();
     List<DadosTemporada> temporadas = new ArrayList<>();
+    private List<Serie> series = new ArrayList<>();
 
     private String json;
     private DadosSerie dadosSerie;
@@ -35,7 +36,6 @@ public class Principal {
 
         this.repositorio = repositorio;
     }
-
 
     public void exibeMenu(){
 
@@ -70,10 +70,7 @@ public class Principal {
                     System.out.println("Opção inválida");
             }
         }
-
-
     }
-
 
     public void buscarSerieWeb(){
 
@@ -99,27 +96,52 @@ public class Principal {
     }
 
     private void buscarEpisodioPorSerie(){
+        //TODO: Trocar a variavel nomeSerie por tituloSeria para testar se fica equivalente
+        //String tituloSerie = dadosSerie.titulo().replace(" ", "+");
 
-        dadosSerie = getDadosSerie();
-        String tituloSerie = dadosSerie.titulo().replace(" ", "+");
+        listarSeriesBuscadas();
+        System.out.println("Escolha uma série pelo nome");
+        var nomeSerie = leitura.nextLine();
 
-       // TODO: se a serie nao é encontrada ou se temporadas é null da erro
-        for (int i = 1; i <= dadosSerie.totalTemporadas(); i++){
+        Optional<Serie> serie = series.stream()
+                .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
+                .findFirst();
 
-            String e = ENDERECO
-                    + tituloSerie
-                    + SEASON + i + API_KEY;
-            System.out.println("Endereço: " + e);
-            json = consumo.obterDados(e);
-            DadosTemporada dadosTemporada = conversor.obterDados(json,DadosTemporada.class);
-            temporadas.add(dadosTemporada);
+        if(serie.isPresent()){
+
+            var serieEncontrada = serie.get();
+
+            // TODO: se a serie nao é encontrada ou se temporadas é null da erro
+            for (int i = 1; i <= serieEncontrada.getTotalTemporadas(); i++){
+
+                String e = ENDERECO
+                        + serieEncontrada.getTitulo().replace(" ", "+")
+                        + SEASON + i + API_KEY;
+
+                json = consumo.obterDados(e);
+                DadosTemporada dadosTemporada = conversor.obterDados(json,DadosTemporada.class);
+                temporadas.add(dadosTemporada);
+
+            }
+            temporadas.forEach(System.out::println);
+
+            List<Episodio> episodios = temporadas.stream()
+                    .flatMap(d-> d.episodios().stream()
+                            .map(e-> new Episodio(d.numero(),e)))
+                    .collect(Collectors.toList());
+
+            serieEncontrada.setEpisodios(episodios);
+            repositorio.save(serieEncontrada);
+
+        } else {
+            System.out.println("Série não encontrada!");
         }
-        temporadas.forEach(System.out::println);
-        //temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+
     }
 
     private void listarSeriesBuscadas() {
-        List<Serie> series = repositorio.findAll();
+
+        series = repositorio.findAll();
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero))
                 .forEach(System.out::println);

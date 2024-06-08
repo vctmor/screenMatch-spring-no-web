@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 @Entity
-@Table(name="episodios_aula")
+@Table(name="episodios_")
 public class Episodio {
 
     @Id
@@ -21,6 +21,8 @@ public class Episodio {
 
     @ManyToOne
     private Serie serie;
+
+    public Episodio(){}
 
     public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio) {
 
