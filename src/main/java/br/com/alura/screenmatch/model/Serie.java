@@ -2,10 +2,7 @@ package br.com.alura.screenmatch.model;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalDouble;
+import java.util.*;
 
 @Entity
 @Table(name = "series_")
@@ -32,7 +29,7 @@ public class Serie {
     public Serie(DadosSerie dadosSerie){
 
         this.titulo = dadosSerie.titulo();
-        this.totalTemporadas = dadosSerie.totalTemporadas();
+        this.totalTemporadas = OptionalInt.of(Integer.parseInt(String.valueOf(dadosSerie.totalTemporadas()))).orElse(0);
         //this.avaliacao = OptionalDouble.of(Double.valueOf(dadosSerie.avaliacao())).orElse(0);
         this.avaliacao = OptionalDouble.of(Double.parseDouble(dadosSerie.avaliacao())).orElse(0);
         this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
@@ -47,6 +44,8 @@ public class Serie {
     }
 
     public void setEpisodios(List<Episodio> episodios) {
+
+        episodios.forEach(e -> e.setSerie(this));
         this.episodios = episodios;
     }
 
@@ -123,6 +122,7 @@ public class Serie {
 
                 ", atores='" + atores + '\'' +
                 ", poster='" + poster + '\'' +
-                ", sinopse='" + sinopse + '\'';
+                ", sinopse='" + sinopse + '\'' ;
+                // ", episodios='" + episodios + '\'';
     }
 }

@@ -106,18 +106,19 @@ public class Principal {
         Optional<Serie> serie = series.stream()
                 .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
                 .findFirst();
+        System.out.println("Nome: " + nomeSerie + " - " + serie.isPresent());
 
         if(serie.isPresent()){
 
             var serieEncontrada = serie.get();
-
+            System.out.println("Serie Encontrada: " + serieEncontrada);
             // TODO: se a serie nao é encontrada ou se temporadas é null da erro
             for (int i = 1; i <= serieEncontrada.getTotalTemporadas(); i++){
 
                 String e = ENDERECO
                         + serieEncontrada.getTitulo().replace(" ", "+")
                         + SEASON + i + API_KEY;
-
+                System.out.println("\nEndereço: " + e);
                 json = consumo.obterDados(e);
                 DadosTemporada dadosTemporada = conversor.obterDados(json,DadosTemporada.class);
                 temporadas.add(dadosTemporada);
